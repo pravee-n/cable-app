@@ -1,0 +1,42 @@
+<section class="header-sc" data-ng-controller="headerCtrl">
+    <a class="hm-link" href="/">Durga Cables</a>
+    <!-- <div class="add-btn" data-ng-click="addNewCustomer()" data-toggle="modal" data-target="#addNewModal">Add</div> -->
+    <button type="button" class="btn btn-primary btn-lg btn-hdr" data-toggle="modal" data-target="#addNewModal">
+      Add Customer
+    </button>
+
+	<div class="modal fade" id="addNewModal" tabindex="-1" role="dialog" aria-labelledby="addNewModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addNewModalLabel">Add New Customer</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<form class="add-new-form">
+	      		<label>Name</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.name">
+
+	      		<label>Address</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.address">
+
+	      		<label>Phone Number</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.phone">
+
+	      		<label>Issue Date</label>
+	      		<input type="text" class="form-control js-new-date">
+
+	      		<label>Monthly Charge</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.monthly_charge">
+	      	</form>
+
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-ng-click="submitNewCustomer()">Add customer</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+</section>

@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<section class="cust-sc" data-ng-controller="customerCtrl">
+	<div class="cust-c">
+		<div class="top-section">
+			<div class="cust-rows">
+				<div class="cust-row">
+					<div class="name cust-title">Name:</div>
+					<div class="name cust-val" data-ng-bind="::customer.name"></div>
+				</div>
+
+				<div class="cust-row">
+					<div class="name cust-title">Address:</div>
+					<div class="name cust-val" data-ng-bind="::customer.address"></div>
+				</div>
+
+				<div class="cust-row">
+					<div class="name cust-title">Phone:</div>
+					<div class="name cust-val" data-ng-bind="::customer.phone"></div>
+				</div>
+
+				<div class="cust-row">
+					<div class="name cust-title">Monthly Charge:</div>
+					<div class="name cust-val" data-ng-bind="::customer.monthly_charge"></div>
+				</div>
+
+				<div class="cust-row">
+					<div class="name cust-title">Subscription date:</div>
+					<div class="name cust-val" data-ng-bind="::customer.subscription_date"></div>
+				</div>
+			</div>
+			<div class="cust-actions">
+				<button class="btn btn-primary cust-btn" data-ng-click="updateModal()" data-toggle="modal" data-target="#updateModal">Update</button>
+				<button class="btn btn-primary cust-btn cust-btn-delete" data-ng-click="delCustomer()">Delete</button>
+			</div>
+		</div>
+
+
+
+
+		<!-- <button class="btn btn-primary cust-btn" data-toggle="modal" data-target="#addPaymentModal">Add Payment</button> -->
+
+		<button class="btn btn-primary cust-btn" data-toggle="modal" data-target="#addBulkPaymentModal">Add Bulk Payment</button>
+
+		<div class="pay-history">
+			<div ng-repeat="(key, value) in paymentHistory" >
+				<div class="ph-row-year" ng-bind="::key"></div>
+				<div class="ph-row ph-row-title">
+					<div class="ph-year">Month</div>
+					<div class="ph-date">Date</div>
+					<div class="ph-amount">Amount</div>
+				</div>
+				<div class="ph-row" ng-repeat="payment in value track by $index" ng-if="payment != null">
+					<div class="ph-year" ng-bind="::payment.month"></div>
+					<div class="ph-date" ng-bind="::payment.date">Date</div>
+					<div class="ph-amount" ng-bind="::payment.amount"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="cust-data js-cust-data">{{desc}}</div>
+	</div>
+
+
+	<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="updateModalLabel">Update Customer</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<form class="add-new-form">
+	      		<label>Name</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.name">
+
+	      		<label>Address</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.address">
+
+	      		<label>Phone Number</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.phone">
+
+	      		<label>Issue Date</label>
+	      		<input type="text" class="form-control js-update-date" data-ng-model="customer.subscription_date">
+
+	      		<label>Monthly Charge</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.monthly_charge">
+	      	</form>
+
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-ng-click="updateCustomer()">Update customer</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<!-- <div class="modal fade payment-modal" id="addPaymentModal" tabindex="-1" role="dialog" aria-labelledby="addPaymentModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addPaymentModalLabel">Add Payment</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<form class="add-new-form">
+	      		<label>Payment Date</label>
+	      		<input type="text" class="form-control js-pay-date" data-ng-model="payment.date">
+
+	      		<label>Amount</label>
+	      		<input type="text" class="form-control" data-ng-model="payment.amount">
+	      	</form>
+
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-ng-click="addPayment()">Add Payment</button>
+	      </div>
+	    </div>
+	  </div>
+	</div> -->
+
+	<div class="modal fade bulk-payment-modal" id="addBulkPaymentModal" tabindex="-1" role="dialog" aria-labelledby="addBulkPaymentModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addBulkPaymentModalLabel">Add Bulk Payment</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<form class="add-new-form">
+				<label>Select Months:</label><br>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(0) > -1" ng-click="toggleSelectedMonth(0)" value="0"> Jan
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(1) > -1" ng-click="toggleSelectedMonth(1)" value="1"> Feb
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(2) > -1" ng-click="toggleSelectedMonth(2)" value="2"> Mar
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(3) > -1" ng-click="toggleSelectedMonth(3)" value="3"> Apr
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(4) > -1" ng-click="toggleSelectedMonth(4)" value="4"> May
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(5) > -1" ng-click="toggleSelectedMonth(5)" value="5"> Jun
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(6) > -1" ng-click="toggleSelectedMonth(6)" value="6"> Jul
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(7) > -1" ng-click="toggleSelectedMonth(7)" value="7"> Aug
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(8) > -1" ng-click="toggleSelectedMonth(8)" value="8"> Sep
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(9) > -1" ng-click="toggleSelectedMonth(9)" value="9"> Oct
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(10) > -1" ng-click="toggleSelectedMonth(10)" value="10"> Nov
+				</div>
+				<div class="month-checkbox">
+					<input type="checkbox" name="selectedMonths" ng-checked="selectedMonths.indexOf(11) > -1" ng-click="toggleSelectedMonth(11)" value="11"> Dec
+				</div>
+
+				<br><br>
+	      		<label>Payment Date</label>
+	      		<input type="text" class="form-control js-bulk-pay-date">
+	      	</form>
+
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-ng-click="addBulkPayment()">Add Payment</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</section>
+
+{% endblock %}

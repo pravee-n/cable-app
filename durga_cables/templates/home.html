@@ -5,6 +5,16 @@
 <section class="hm-sc" data-ng-controller="homeCtrl">
 	<div class="js-hm-data">{{ customer_data }}</div>
 	<div class="hm-c">
+
+		<div class="type-container">
+			<label class="label-select">Customer type:</label>
+			<select class="js-type">
+				<option {% if type == None %} selected {% endif %} value="0">Both</option>
+				<option {% if type == 'den' %} selected {% endif %} value="den">Den</option>
+				<option {% if type == 'siti' %} selected {% endif %} value="siti">Siti</option>
+			</select>
+		</div>
+
 		<div class="customer-table">
 			<div class="ct-row title-row">
 				<div class="name">
@@ -19,6 +29,30 @@
 				<div class="address" data-ng-bind="::customer.address"></div>
 			</a>
 		</div>
+
+		<div class="hm-ac-btns">
+			<div class="btns-row">
+				{% if prevUrl %}
+					<a class="nav-btn" href="{{prevUrl}}">Previous</a>
+				{% endif %}
+
+				{% if nextUrl %}
+					<a class="nav-btn" href="{{nextUrl}}">Next</a>
+				{% endif %}
+			</div>
+
+			{% if countTxt %}
+				<div class="txt-row">
+					{{countTxt}}
+				</div>
+			{% endif %}
+		</div>
+
+
+
+
+
+
 	</div>
 </section>
 

@@ -15,6 +15,7 @@
 		font-size: 20px;
 		text-transform: uppercase;
 		font-weight: 100;
+		letter-spacing: 2px;
 		&:hover {
 			text-decoration: none;
 			color: white;
@@ -25,6 +26,7 @@
 		margin-right: 50px;
 	}
 	.btn-hdr {
+		display: none;
 		float: right;
 		margin-right: 50px;
 		height: 35px;
@@ -34,6 +36,41 @@
 		border-radius: 0;
 		font-size: 14px;
 		margin-top: 7px;
+	}
+}
+
+.ind-sc {
+	.ind-c {
+		width: 960px;
+		margin: 0 auto;
+		.main-btn-row {
+			padding: 50px;
+			text-align: center;
+		}
+		.ind-btn {
+			display: inline-block;
+			background: #337ab7;
+			padding: 8px 15px;
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			font-size: 12px;
+			color: white;
+			border-radius: 2px;
+			margin-right: 20px;
+			cursor: pointer;
+			&:hover {
+				text-decoration: none;
+			}
+		}
+	}
+}
+
+.add-cust-modal, .update-cust-modal {
+	input, select {
+		margin-bottom: 20px;
+	}
+	.label-select {
+		margin-right: 15px;
 	}
 }
 
@@ -73,6 +110,35 @@
 					   box-sizing: border-box;
 				}
 			}
+		}
+
+		.hm-ac-btns {
+			.btns-row {
+				text-align: center;
+				.nav-btn {
+					display: inline-block;
+					background: #337ab7;
+					padding: 8px 15px;
+					text-transform: uppercase;
+					letter-spacing: 2px;
+					font-size: 12px;
+					color: white;
+					border-radius: 2px;
+					margin-right: 20px;
+					&:hover {
+						text-decoration: none;
+					}
+				}
+			}
+			.txt-row {
+				text-align: center;
+				margin-top: 15px;
+				margin-left: -15px;
+			}
+		}
+		.type-container {
+			padding: 30px 0 0 0;
+			text-align: center;
 		}
 	}
 	.js-hm-data {

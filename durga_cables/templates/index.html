@@ -1,12 +1,16 @@
-<section class="header-sc">
-    <a class="hm-link" href="/">Durga Cables</a>
-    <!-- <div class="add-btn" data-ng-click="addNewCustomer()" data-toggle="modal" data-target="#addNewModal">Add</div> -->
+{% extends "base.html" %}
 
-    <!-- <button type="button" class="btn btn-primary btn-lg btn-hdr" data-toggle="modal" data-target="#addNewModal">
-      Add Customer
-    </button> -->
+{% block body %}
 
-	<!-- <div class="modal fade" id="addNewModal" tabindex="-1" role="dialog" aria-labelledby="addNewModalLabel" aria-hidden="true">
+<section class="ind-sc" ng-controller="indexCtrl">
+	<div class="ind-c">
+		<div class="main-btn-row">
+			<div class="ind-btn btn-add" data-toggle="modal" data-target="#addNewModal">Add new Customer</div>
+			<a href="/customers" class="ind-btn btn-view">View All Customers</a>
+		</div>
+	</div>
+
+	<div class="modal fade add-cust-modal" id="addNewModal" tabindex="-1" role="dialog" aria-labelledby="addNewModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -15,6 +19,12 @@
 	      </div>
 	      <div class="modal-body">
 	      	<form class="add-new-form">
+	      		<label>Vc No.</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.vc_no">
+
+	      		<label>STB No.</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.stb_no">
+
 	      		<label>Name</label>
 	      		<input type="text" class="form-control" data-ng-model="customer.name">
 
@@ -27,6 +37,13 @@
 	      		<label>Issue Date</label>
 	      		<input type="text" class="form-control js-new-date">
 
+	      		<label class="label-select">Customer type:</label>
+	      		<select ng-model="customer.type">
+	      			<option value="den">Den</option>
+	      			<option value="siti">Siti</option>
+	      		</select>
+	      		<br>
+
 	      		<label>Monthly Charge</label>
 	      		<input type="text" class="form-control" data-ng-model="customer.monthly_charge">
 	      	</form>
@@ -38,6 +55,8 @@
 	      </div>
 	    </div>
 	  </div>
-	</div> -->
+	</div>
 
 </section>
+
+{% endblock %}

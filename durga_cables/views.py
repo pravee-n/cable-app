@@ -18,22 +18,68 @@ def home(request):
 	ctx = {
 		'customer_data': json.dumps(customer_data)
 	}
-	return render(request, 'home.html', ctx)
+	return render(request, 'index.html', ctx)
 	# return HttpResponse("Hello World!");
+
+def listCustomers(request):
+	# pdb.set_trace();
+	querySize = 2;
+	start_index = int(request.GET.get('s', 0))
+	end_index = int(request.GET.get('e', querySize))
+	type = request.GET.get('ty')
+	if type is not None:
+		customers = Customer.objects.filter(type=type)[start_index:end_index];
+		totalCount = Customer.objects.filter(type=type).count();
+	else:
+		customers = Customer.objects.all()[start_index:end_index];
+		totalCount = Customer.objects.all().count();
+
+	customer_data = []
+	for customer in customers:
+		customer_data.append({
+			'name': customer.name,
+			'address': customer.address,
+			'cid': customer.id
+		})
+	ctx = {
+		'customer_data': json.dumps(customer_data),
+		'type': type
+	}
+
+	if type is not None:
+		if end_index < totalCount:
+			ctx['nextUrl'] = '/customers?s=' + str(end_index) + '&e=' + str(end_index + querySize) + '&ty=' + type;
+
+		if start_index > 0:
+			ctx['prevUrl'] = '/customers?s=' + str(max(0, start_index - querySize)) + '&e=' + str(start_index) + '&ty=' + type;
+	else:
+		if end_index <= totalCount:
+			ctx['nextUrl'] = '/customers?s=' + str(end_index) + '&e=' + str(end_index + querySize);
+
+		if start_index > 0:
+			ctx['prevUrl'] = '/customers?s=' + str(max(0, start_index - querySize)) + '&e=' + str(start_index);
+
+
+	ctx['countTxt'] = 'Showing ' + str(start_index + 1)  + ' - ' + str(min(totalCount, end_index)) + ' of total ' + str(totalCount) + ' records';
+
+	return render(request, 'home.html', ctx)
 
 
 @csrf_exempt
 def addNewCustomer(request):
-	pdb.set_trace()
+	# pdb.set_trace()
 	try:
 		customerData = json.loads(request.body);
 		# payment_data = {}
 		customer = Customer(
+					vc_no = str(customerData['vc_no']),
+					stb_no = str(customerData['stb_no']),
 	                name = str(customerData['name']),
 	                address = str(customerData['address']),
 	                subscription_date = str(customerData['subscription_date']),
 	                phone = str(customerData['phone']),
 	                monthly_charge = str(customerData['monthly_charge']),
+	                type = str(customerData['type']),
 	                payment_history = ''
 	            ).save()
 
@@ -41,9 +87,15 @@ def addNewCustomer(request):
 		   'sc': '700',
 		}
 	except Exception as inst:
-		responseJson = {
-		   'sc': '600',
-		}
+		if 'vc_no' in str(inst) and 'Duplicate entry' in str(inst):
+			responseJson = {
+			   'sc': '601',
+			   'message': "This VC no. already exists."
+			}
+		else:
+			responseJson = {
+			   'sc': '600',
+			}
 
 	responseJsonDump = json.dumps(responseJson)
 	return HttpResponse(responseJsonDump, content_type="application/json")
@@ -54,12 +106,15 @@ def viewCustomer(request, c_id):
 	# pdb.set_trace()
 	customer = Customer.objects.get(id=customer_id);
 	customer_res = {
+		'vc_no': customer.vc_no,
+		'stb_no': customer.stb_no,
 		'name': customer.name,
 		'address': customer.address,
 		'phone': customer.phone,
 		'monthly_charge': customer.monthly_charge,
 		'subscription_date': customer.subscription_date,
 		'payment_history': customer.payment_history,
+		'type': customer.type,
 		'c_id': customer.id
 	}
 	ctx = {
@@ -73,16 +128,29 @@ def updateCustomer(request, c_id):
 	customer = Customer.objects.get(id=customer_id);
 	updated_data = json.loads(request.body);
 
-	customer.name = updated_data['name']
-	customer.address = updated_data['address']
-	customer.phone = updated_data['phone']
-	customer.monthly_charge = updated_data['monthly_charge']
-	customer.subscription_date = str(updated_data['subscription_date'])
-	customer.save()
-
-	responseJson = {
-	   'sc': '700',
-	}
+	try:
+		customer.vc_no = updated_data['vc_no']
+		customer.stb_no = updated_data['stb_no']
+		customer.name = updated_data['name']
+		customer.address = updated_data['address']
+		customer.phone = updated_data['phone']
+		customer.monthly_charge = updated_data['monthly_charge']
+		customer.type = updated_data['type']
+		customer.subscription_date = str(updated_data['subscription_date'])
+		customer.save()
+		responseJson = {
+		   'sc': '700',
+		}
+	except Exception as inst:
+		if 'vc_no' in str(inst) and 'Duplicate entry' in str(inst):
+			responseJson = {
+			   'sc': '601',
+			   'message': "This VC no. already exists."
+			}
+		else:
+			responseJson = {
+			   'sc': '600',
+			}
 
 	responseJsonDump = json.dumps(responseJson)
 	return HttpResponse(responseJsonDump, content_type="application/json")
@@ -102,8 +170,6 @@ def deleteCustomer(request, c_id):
 		responseJson = {
 		   'sc': '600',
 		}
-
-
 
 	responseJsonDump = json.dumps(responseJson)
 	return HttpResponse(responseJsonDump, content_type="application/json")

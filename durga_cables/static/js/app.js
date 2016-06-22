@@ -7,7 +7,7 @@ angular.module('cableApp', [function() {
   $interpolateProvider.endSymbol('}]}');
 })
 
-.controller('headerCtrl', ['$scope', '$http', function($scope, $http) {
+/*.controller('headerCtrl', ['$scope', '$http', function($scope, $http) {
 	$scope.customer = {
 		'name': '',
 		'address': '',
@@ -44,19 +44,76 @@ angular.module('cableApp', [function() {
 			});
 
 	};
+}])*/
+
+.controller('indexCtrl', ['$scope', '$http', function($scope, $http) {
+	console.log('indexCtrl');
+	$scope.customer = {
+		'name': '',
+		'address': '',
+		'phone': '',
+		'subscription_date': '',
+		'monthly_charge': '',
+		'type': 'den'
+	};
+
+	$('.js-new-date').datepicker({
+		format: 'dd-mm-yyyy',
+		autoclose: true
+	});
+
+	$scope.submitNewCustomer = function() {
+		var url = '/addNewCustomer/';
+		// var subscriptionDate = $('.js-new-date').val().split('-').reverse().join('-')
+		var subscriptionDate = $('.js-new-date').val();
+		$scope.customer.subscription_date = subscriptionDate;
+		console.log($scope.customer);
+
+		$http.post(url, $scope.customer)
+			.success(function(res) {
+				if (res.sc == '700') {
+					alert('Added successfully.');
+					window.location = '/';
+				}
+				else if (res.sc == '601') {
+					alert(res.message);
+				}
+				else {
+					alert('Error !!');
+				}
+			})
+			.error(function() {
+
+			});
+
+	};
 }])
 
-.controller('homeCtrl', ['$scope', function($scope) {
+.controller('homeCtrl', ['$scope', '$location', function($scope, $location) {
 	var customerText = $.trim($('.js-hm-data').text()),
 		customerData = angular.fromJson(customerText),
 		i = 0;
 
 	$scope.customers = [];
+	console.log($location);
+	console.log($location.search().ty);
 
 	for (i = 0; i < customerData.length; i++) {
 		$scope.customers.push(customerData[i]);
 	}
 	console.log($scope.customers);
+
+	$('.js-type').change(function() {
+		console.log($(this).val());
+		if ($(this).val() == 0) {
+			window.location = '/customers';
+		}
+		else {
+			window.location = '/customers?ty=' + $(this).val();
+		}
+
+
+	});
 }])
 
 .controller('customerCtrl', ['$scope', '$http', function($scope, $http) {
@@ -114,6 +171,9 @@ angular.module('cableApp', [function() {
 				if (res.sc == '700') {
 					alert('Updated successfully.');
 					location.reload();
+				}
+				else if (res.sc == '601') {
+					alert(res.message);
 				}
 				else {
 					alert('Error !!');

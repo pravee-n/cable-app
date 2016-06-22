@@ -7,6 +7,16 @@
 		<div class="top-section">
 			<div class="cust-rows">
 				<div class="cust-row">
+					<div class="name cust-title">VC no.:</div>
+					<div class="name cust-val" data-ng-bind="::customer.vc_no"></div>
+				</div>
+
+				<div class="cust-row">
+					<div class="name cust-title">STB No.:</div>
+					<div class="name cust-val" data-ng-bind="::customer.stb_no"></div>
+				</div>
+
+				<div class="cust-row">
 					<div class="name cust-title">Name:</div>
 					<div class="name cust-val" data-ng-bind="::customer.name"></div>
 				</div>
@@ -19,6 +29,11 @@
 				<div class="cust-row">
 					<div class="name cust-title">Phone:</div>
 					<div class="name cust-val" data-ng-bind="::customer.phone"></div>
+				</div>
+
+				<div class="cust-row">
+					<div class="name cust-title">Type:</div>
+					<div class="name cust-val" data-ng-bind="::customer.type"></div>
 				</div>
 
 				<div class="cust-row">
@@ -42,7 +57,7 @@
 
 		<!-- <button class="btn btn-primary cust-btn" data-toggle="modal" data-target="#addPaymentModal">Add Payment</button> -->
 
-		<button class="btn btn-primary cust-btn" data-toggle="modal" data-target="#addBulkPaymentModal">Add Bulk Payment</button>
+		<button class="btn btn-primary cust-btn" data-toggle="modal" data-target="#addBulkPaymentModal">Add Payment</button>
 
 		<div class="pay-history">
 			<div ng-repeat="(key, value) in paymentHistory" >
@@ -64,7 +79,7 @@
 	</div>
 
 
-	<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+	<div class="modal fade update-cust-modal" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -73,6 +88,12 @@
 	      </div>
 	      <div class="modal-body">
 	      	<form class="add-new-form">
+	      		<label>VC no.</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.vc_no">
+
+	      		<label>STB No.</label>
+	      		<input type="text" class="form-control" data-ng-model="customer.stb_no">
+
 	      		<label>Name</label>
 	      		<input type="text" class="form-control" data-ng-model="customer.name">
 
@@ -84,6 +105,13 @@
 
 	      		<label>Issue Date</label>
 	      		<input type="text" class="form-control js-update-date" data-ng-model="customer.subscription_date">
+
+	      		<label class="label-select">Customer type:</label>
+	      		<select ng-model="customer.type">
+	      			<option value="den">Den</option>
+	      			<option value="siti">Siti</option>
+	      		</select>
+	      		<br>
 
 	      		<label>Monthly Charge</label>
 	      		<input type="text" class="form-control" data-ng-model="customer.monthly_charge">

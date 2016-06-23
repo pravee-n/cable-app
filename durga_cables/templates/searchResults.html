@@ -2,30 +2,29 @@
 
 {% block body %}
 
-<section class="hm-sc" data-ng-controller="homeCtrl">
+<section class="hm-sc sr-sc" data-ng-controller="homeCtrl">
 	<div class="js-hm-data">{{ customer_data }}</div>
 	<div class="hm-c">
-
-		<div class="type-container">
-			<label class="label-select">Customer type:</label>
-			<select class="js-type">
-				<option {% if type == None %} selected {% endif %} value="0">Both</option>
-				<option {% if type == 'den' %} selected {% endif %} value="den">Den</option>
-				<option {% if type == 'siti' %} selected {% endif %} value="siti">Siti</option>
-			</select>
-		</div>
 
 		<div class="customer-table">
 			<div class="ct-row title-row">
 				<div class="name">
+					Vc no.
+				</div>
+				<div class="name">
 					Name
+				</div>
+				<div class="name">
+					Phone
 				</div>
 				<div class="address">
 					Address
 				</div>
 			</div>
 			<a data-ng-href="{[{::'/customer/' + customer.cid}]}" class="ct-row" data-ng-repeat="customer in customers">
+				<div class="name" data-ng-bind="::customer.vc_no"></div>
 				<div class="name" data-ng-bind="::customer.name"></div>
+				<div class="name" data-ng-bind="::customer.phone"></div>
 				<div class="address" data-ng-bind="::customer.address"></div>
 			</a>
 		</div>

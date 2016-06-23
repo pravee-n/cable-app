@@ -8,6 +8,28 @@
 			<div class="ind-btn btn-add" data-toggle="modal" data-target="#addNewModal">Add new Customer</div>
 			<a href="/customers" class="ind-btn btn-view">View All Customers</a>
 		</div>
+
+		<div class="vp-block">
+			<p>View Pending Payments</p>
+			<label>Select Month</label>
+			<br>
+			<input type="text" class="form-control js-pending-date" placeholder="Click to select Month">
+			<button class="btn btn-m vp-btn" ng-click="viewPending()">View</button>
+		</div>
+
+		<div class="search-block">
+			<p class="search-title">
+				Search
+			</p>
+			<label class="label-select">Search by: </label>
+			<select ng-model="search.type">
+				<option value="vcno">VC no.</option>
+				<option value="name">Name</option>
+				<option value="phone">Mobile No.</option>
+			</select>
+			<input type="text" class="form-control" ng-model="search.query" placeholder="Enter Search term">
+			<button class="btn btn-m search-btn" ng-click="doSearch()">Search</button>
+		</div>
 	</div>
 
 	<div class="modal fade add-cust-modal" id="addNewModal" tabindex="-1" role="dialog" aria-labelledby="addNewModalLabel" aria-hidden="true">

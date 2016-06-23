@@ -57,8 +57,20 @@ angular.module('cableApp', [function() {
 		'type': 'den'
 	};
 
+	$scope.search = {
+		type: 'vcno',
+		query: ''
+	};
+
 	$('.js-new-date').datepicker({
 		format: 'dd-mm-yyyy',
+		autoclose: true
+	});
+
+	$('.js-pending-date').datepicker({
+		format: "mm-yyyy",
+	    startView: "months",
+	    minViewMode: "months",
 		autoclose: true
 	});
 
@@ -85,7 +97,15 @@ angular.module('cableApp', [function() {
 			.error(function() {
 
 			});
+	};
 
+	$scope.viewPending = function() {
+		var pendingMonthYear = $('.js-pending-date').val();
+		window.location = '/pending?m=' + pendingMonthYear.split('-')[0] + '&y=' + pendingMonthYear.split('-')[1];
+	};
+
+	$scope.doSearch = function() {
+		window.location = '/search?ty=' + $scope.search.type + '&q=' + $scope.search.query;
 	};
 }])
 

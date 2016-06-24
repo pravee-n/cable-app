@@ -110,6 +110,8 @@ def viewPending(request):
 		pending_payment = 0;
 		pendingMonth = initialPendingMonth
 		pendingYear = initialPendingYear
+		if not customer.subscription_date:
+			continue
 		subscription_month = int(customer.subscription_date.split('-')[1]) - 1
 		subscription_year = int(customer.subscription_date.split('-')[2])
 		if not customer.payment_history:

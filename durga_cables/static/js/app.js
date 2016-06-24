@@ -85,7 +85,7 @@ angular.module('cableApp', [function() {
 			.success(function(res) {
 				if (res.sc == '700') {
 					alert('Added successfully.');
-					window.location = '/';
+					window.location = '/customer/' + res.id;
 				}
 				else if (res.sc == '601') {
 					alert(res.message);

@@ -30,7 +30,7 @@
 			<a data-ng-href="{[{::'/customer/' + customer.cid}]}" class="ct-row" data-ng-repeat="customer in customers">
 				<div class="name" data-ng-bind="::customer.name"></div>
 				<div class="address" data-ng-bind="::customer.address"></div>
-				<div class="amount" data-ng-bind="::customer.pending_amount"></div>
+				<div class="amount" data-ng-bind="::customer.pending_payment"></div>
 			</a>
 		</div>
 

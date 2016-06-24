@@ -95,9 +95,9 @@ def search(request):
 	return render(request, 'searchResults.html', ctx)
 
 def viewPending(request):
-	pdb.set_trace();
+	# pdb.set_trace();
 	initialPendingMonth = int(request.GET.get('m')) - 1
-	initialPendingYear = int(request.GET.get('y')) - 1
+	initialPendingYear = int(request.GET.get('y'))
 	pendingMonth = int(request.GET.get('m')) - 1
 	pendingYear = int(request.GET.get('y'))
 	ctx = {};
@@ -117,22 +117,23 @@ def viewPending(request):
 		else:
 			payment_history = json.loads(customer.payment_history);
 
-		if payment_history and payment_history[pendingYear] and payment_history[pendingYear][pendingMonth]:
+		if payment_history and str(pendingYear) in payment_history and payment_history[str(pendingYear)][pendingMonth]:
 			continue
 		else:
 			while pendingYear >= subscription_year:
-				while pendingMonth >= subscription_month if pendingYear == subscription_year else 0:
-					if not payment_history or not payment_history[pendingYear] or not payment_history[pendingYear][pendingMonth]:
+				while pendingMonth >= (subscription_month if pendingYear == subscription_year else 0):
+					if not payment_history or not str(pendingYear) in payment_history or not payment_history[str(pendingYear)][pendingMonth]:
 						pending_payment += customer.monthly_charge;
 					pendingMonth -= 1;
 				pendingMonth = 11;
 				pendingYear -= 1;
-			pending_customers.append({
-				'name': customer.name,
-				'address': customer.address,
-				'cid': customer.id,
-				'pending_amount': pending_payment
-			})
+			if pending_payment > 0:
+				pending_customers.append({
+					'name': customer.name,
+					'address': customer.address,
+					'cid': customer.id,
+					'pending_payment': pending_payment
+				})
 
 	ctx = {
 		'customer_data': json.dumps(pending_customers)
@@ -142,7 +143,7 @@ def viewPending(request):
 
 @csrf_exempt
 def addNewCustomer(request):
-	# pdb.set_trace()
+	pdb.set_trace()
 	try:
 		customerData = json.loads(request.body);
 		# payment_data = {}
@@ -156,10 +157,14 @@ def addNewCustomer(request):
 	                monthly_charge = str(customerData['monthly_charge']),
 	                type = str(customerData['type']),
 	                payment_history = ''
-	            ).save()
+	            )
+		customer.save()
+
+		# thisCustomer = Customer.objects.filter(vc_no=str(customerData['vc_no']))
 
 		responseJson = {
-		   'sc': '700',
+			'id': customer.id,
+		    'sc': '700'
 		}
 	except Exception as inst:
 		if 'vc_no' in str(inst) and 'Duplicate entry' in str(inst):

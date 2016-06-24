@@ -143,7 +143,7 @@ def viewPending(request):
 
 @csrf_exempt
 def addNewCustomer(request):
-	pdb.set_trace()
+	# pdb.set_trace()
 	try:
 		customerData = json.loads(request.body);
 		# payment_data = {}

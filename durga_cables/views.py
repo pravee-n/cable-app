@@ -370,6 +370,30 @@ def addBulkPayment(request, c_id):
 	return HttpResponse(responseJsonDump, content_type="application/json")
 
 
+@csrf_exempt
+def updateMonthlyCost(request):
+	# pdb.set_trace();
+	request_data = json.loads(request.body)
+	new_charge = int(request_data['new_charge'])
+	customers = Customer.objects.all()
+
+	try:
+		for customer in customers:
+			customer.monthly_charge = new_charge;
+			customer.save();
+
+		responseJson = {
+		   'sc': '700',
+		}
+
+	except Exception as inst:
+		responseJson = {
+		   'sc': '600',
+		}
+
+	return HttpResponse(json.dumps(responseJson), content_type="application/json")
+
+
 def getMonthName(monthNum):
 	if monthNum == '01' or monthNum == 0:
 		return 'Jan'

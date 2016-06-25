@@ -112,6 +112,28 @@ angular.module('cableApp', [function() {
 	$scope.doSearch = function() {
 		window.location = '/search?ty=' + $scope.search.type + '&q=' + $scope.search.query;
 	};
+
+	$scope.submitNewCharge = function() {
+		console.log($scope.newMonthlyCharge);
+		// return;
+		var url = '/updateMonthlyCost/';
+		var postData = {
+			'new_charge': $scope.newMonthlyCharge
+		};
+		$http.post(url, postData)
+			.success(function(res) {
+				if (res.sc == '700') {
+					alert('Updated new monthly charge successfully.');
+					window.location = '/';
+				}
+				else {
+					alert('Error !!');
+				}
+			})
+			.error(function() {
+
+			});
+	};
 }])
 
 .controller('homeCtrl', ['$scope', '$location', function($scope, $location) {

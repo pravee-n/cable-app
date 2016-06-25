@@ -10,7 +10,7 @@
 		</div>
 
 		<div class="vp-block">
-			<p>View Pending Payments</p>
+			<p class="vp-title">View Pending Payments</p>
 			<label>Select Month</label>
 			<br>
 			<input type="text" class="form-control js-pending-date" placeholder="Click to select Month">
@@ -30,6 +30,11 @@
 			<input type="text" class="form-control" ng-model="search.query" placeholder="Enter Search term">
 			<button class="btn btn-m search-btn" ng-click="doSearch()">Search</button>
 		</div>
+
+		<div class="bottom-row">
+			<div class="ind-btn btn-up-cost" data-toggle="modal" data-target="#updateCostModal">Update Monthly Charge</div>
+		</div>
+
 	</div>
 
 	<div class="modal fade add-cust-modal" id="addNewModal" tabindex="-1" role="dialog" aria-labelledby="addNewModalLabel" aria-hidden="true">
@@ -74,6 +79,28 @@
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	        <button type="button" class="btn btn-primary" data-ng-click="submitNewCustomer()">Add customer</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="modal fade add-cust-modal" id="updateCostModal" tabindex="-1" role="dialog" aria-labelledby="updateCostModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addNewModalLabel">Update Monthly Charge</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<form class="add-new-form">
+	      		<label>New Monthly Charge</label>
+	      		<input type="number" class="form-control" data-ng-model="newMonthlyCharge">
+	      	</form>
+
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-ng-click="submitNewCharge()">Update Monthly Charge</button>
 	      </div>
 	    </div>
 	  </div>

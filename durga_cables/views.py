@@ -23,7 +23,7 @@ def home(request):
 
 def listCustomers(request):
 	# pdb.set_trace();
-	querySize = 50;
+	querySize = 2;
 	start_index = int(request.GET.get('s', 0))
 	end_index = int(request.GET.get('e', querySize))
 	type = request.GET.get('ty')
@@ -53,7 +53,7 @@ def listCustomers(request):
 		if start_index > 0:
 			ctx['prevUrl'] = '/customers?s=' + str(max(0, start_index - querySize)) + '&e=' + str(start_index) + '&ty=' + type;
 	else:
-		if end_index <= totalCount:
+		if end_index < totalCount:
 			ctx['nextUrl'] = '/customers?s=' + str(end_index) + '&e=' + str(end_index + querySize);
 
 		if start_index > 0:
@@ -96,16 +96,26 @@ def search(request):
 
 def viewPending(request):
 	# pdb.set_trace();
+	querySize = 2;
+	start_index = int(request.GET.get('s', 0))
+	end_index = int(request.GET.get('e', querySize))
+	type = request.GET.get('ty')
+
 	initialPendingMonth = int(request.GET.get('m')) - 1
 	initialPendingYear = int(request.GET.get('y'))
 	pendingMonth = int(request.GET.get('m')) - 1
 	pendingYear = int(request.GET.get('y'))
+
 	ctx = {};
 	pending_customers = []
 	if pendingMonth is None or pendingYear is None:
 		return render(request, 'pendingCustomers.html', ctx)
 
-	customers = Customer.objects.all();
+	if type is not None:
+		customers = Customer.objects.filter(type=type)
+	else:
+		customers = Customer.objects.all();
+
 	for customer in customers:
 		pending_payment = 0;
 		pendingMonth = initialPendingMonth
@@ -119,27 +129,47 @@ def viewPending(request):
 		else:
 			payment_history = json.loads(customer.payment_history);
 
-		if payment_history and str(pendingYear) in payment_history and payment_history[str(pendingYear)][pendingMonth]:
-			continue
-		else:
-			while pendingYear >= subscription_year:
-				while pendingMonth >= (subscription_month if pendingYear == subscription_year else 0):
-					if not payment_history or not str(pendingYear) in payment_history or not payment_history[str(pendingYear)][pendingMonth]:
-						pending_payment += customer.monthly_charge;
-					pendingMonth -= 1;
-				pendingMonth = 11;
-				pendingYear -= 1;
-			if pending_payment > 0:
-				pending_customers.append({
-					'name': customer.name,
-					'address': customer.address,
-					'cid': customer.id,
-					'pending_payment': pending_payment
-				})
+		# if payment_history and str(pendingYear) in payment_history and payment_history[str(pendingYear)][pendingMonth]:
+		# 	continue
+		# else:
+		while pendingYear >= subscription_year:
+			while pendingMonth >= (subscription_month if pendingYear == subscription_year else 0):
+				if not payment_history or not str(pendingYear) in payment_history or not payment_history[str(pendingYear)][pendingMonth]:
+					pending_payment += customer.monthly_charge;
+				pendingMonth -= 1;
+			pendingMonth = 11;
+			pendingYear -= 1;
+		if pending_payment > 0:
+			pending_customers.append({
+				'name': customer.name,
+				'address': customer.address,
+				'cid': customer.id,
+				'pending_payment': pending_payment
+			})
 
-	ctx = {
-		'customer_data': json.dumps(pending_customers)
-	}
+
+	totalCount = len(pending_customers)
+
+	if type is not None:
+		if end_index < totalCount:
+			ctx['nextUrl'] = '/pending?m=' + str(initialPendingMonth + 1) + '&y=' + str(initialPendingYear) + '&ty=' + type + '&s=' + str(end_index) + '&e=' + str(end_index + querySize);
+
+		if start_index > 0:
+			ctx['prevUrl'] = '/pending?m=' + str(initialPendingMonth + 1) + '&y=' + str(initialPendingYear) + '&ty=' + type + '&s=' + str(max(0, start_index - querySize)) + '&e=' + str(start_index);
+	else:
+		if end_index < totalCount:
+			ctx['nextUrl'] = '/pending?m=' + str(initialPendingMonth + 1) + '&y=' + str(initialPendingYear) + '&s=' + str(end_index) + '&e=' + str(end_index + querySize);
+
+		if start_index > 0:
+			ctx['prevUrl'] = '/pending?m=' + str(initialPendingMonth + 1) + '&y=' + str(initialPendingYear) + '&s=' + str(max(0, start_index - querySize)) + '&e=' + str(start_index);
+
+
+	pending_customers = pending_customers[max(0, start_index):min(end_index, len(pending_customers))]
+
+	ctx['customer_data'] = json.dumps(pending_customers)
+	ctx['type'] = type
+	ctx['countTxt'] = 'Showing ' + str(start_index + 1)  + ' - ' + str(min(totalCount, end_index)) + ' of total ' + str(totalCount) + ' records';
+
 	return render(request, 'pendingCustomers.html', ctx)
 
 
@@ -203,6 +233,7 @@ def viewCustomer(request, c_id):
 		'desc': json.dumps(customer_res)
 	}
 	return render(request, 'customer.html', ctx)
+
 
 @csrf_exempt
 def updateCustomer(request, c_id):
@@ -295,6 +326,7 @@ def addPayment(request, c_id):
 	responseJsonDump = json.dumps(responseJson)
 	return HttpResponse(responseJsonDump, content_type="application/json")
 
+
 @csrf_exempt
 def addBulkPayment(request, c_id):
 	try:
@@ -336,6 +368,7 @@ def addBulkPayment(request, c_id):
 
 	responseJsonDump = json.dumps(responseJson)
 	return HttpResponse(responseJsonDump, content_type="application/json")
+
 
 def getMonthName(monthNum):
 	if monthNum == '01' or monthNum == 0:

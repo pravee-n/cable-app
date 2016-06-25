@@ -120,26 +120,57 @@ angular.module('cableApp', [function() {
 		i = 0;
 
 	$scope.customers = [];
-	console.log($location);
-	console.log($location.search().ty);
 
 	for (i = 0; i < customerData.length; i++) {
 		$scope.customers.push(customerData[i]);
 	}
-	console.log($scope.customers);
+
+	// console.log($scope.customers);
 
 	$('.js-type').change(function() {
-		console.log($(this).val());
 		if ($(this).val() == 0) {
 			window.location = '/customers';
 		}
 		else {
 			window.location = '/customers?ty=' + $(this).val();
 		}
-
-
 	});
 }])
+
+
+.controller('pendingCtrl', ['$scope', function($scope) {
+	var customerText = $.trim($('.js-hm-data').text()),
+		customerData = angular.fromJson(customerText),
+		i = 0;
+
+	$scope.customers = [];
+
+	for (i = 0; i < customerData.length; i++) {
+		$scope.customers.push(customerData[i]);
+	}
+
+	$('.js-type').change(function() {
+		if ($(this).val() == 0) {
+			window.location = '/pending?m=' + getQueryVariable('m') + '&y=' + getQueryVariable('y');
+		}
+		else {
+			window.location = '/pending?m=' + getQueryVariable('m') + '&y=' + getQueryVariable('y') + '&ty=' + $(this).val();
+		}
+	});
+
+	function getQueryVariable(variable) {
+	       var query = window.location.search.substring(1);
+	       var vars = query.split("&");
+	       for (var i = 0; i < vars.length; i++) {
+	               var pair = vars[i].split("=");
+	               if(pair[0] == variable) {
+	               	return pair[1];
+	               }
+	       }
+	       return(false);
+	}
+}])
+
 
 .controller('customerCtrl', ['$scope', '$http', function($scope, $http) {
 	var customerText = $.trim($('.js-cust-data').text()),
